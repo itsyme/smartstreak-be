@@ -1,16 +1,35 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/itsyme/smartstreak-be/db"
+	"github.com/itsyme/smartstreak-be/handlers"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintln(w, "Go backend is running!")
-    })
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-    fmt.Println("Server started at http://localhost:8080")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+	db.Connect()
+	defer db.DB.Close()
+
+	http.HandleFunc("/user", handlers.GetUserHandler)
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Go backend is running!")
+	})
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	fmt.Printf("Server started at http://localhost:%s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
