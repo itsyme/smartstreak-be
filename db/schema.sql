@@ -28,6 +28,11 @@ CREATE TABLE answered_questions (
     user_answer TEXT NOT NULL
 );
 
+CREATE TABLE daily_questions (
+    date DATE PRIMARY KEY,
+    question_ids INTEGER[] NOT NULL
+);
+
 -- Creates row in users table when a new user is created in auth.users
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
