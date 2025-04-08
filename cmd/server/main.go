@@ -24,6 +24,8 @@ func main() {
 
 	http.HandleFunc("/question", handlers.GetQuestionHandler)
 
+	http.HandleFunc("/daily-questions", handlers.GetTodaysDailyQuestionsHandler)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Go backend is running!")
 	})
